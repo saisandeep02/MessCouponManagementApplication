@@ -1,6 +1,8 @@
-FROM eclipse-temurin:17-jdk-alpine
-VOLUME /tmp
-ARG JAR_FILE=target/*.jar
-COPY ./target/Campus_mess_coupon_management_system-0.0.1-SNAPSHOT.jar app.jar
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+FROM maven:3.9-eclipse-temurin-21 AS build
+COPY . .
+RUN mvn clean package -DskipTests
+
+FROM eclipse-temurin:21-alpine
+COPY --from=build /target/*.jar demo.jar
 EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "/demo.jar"]
