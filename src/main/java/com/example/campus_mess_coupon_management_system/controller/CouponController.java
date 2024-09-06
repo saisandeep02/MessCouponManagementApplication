@@ -1,10 +1,11 @@
 package com.example.campus_mess_coupon_management_system.controller;
-
 import com.example.campus_mess_coupon_management_system.model.Coupon;
 import com.example.campus_mess_coupon_management_system.service.CouponService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -13,11 +14,13 @@ import java.util.List;
 @RequestMapping("/api/coupons")
 public class CouponController {
 
+    private static final Logger logger = LoggerFactory.getLogger(CouponController.class);
     @Autowired
     private CouponService couponService;
 
     @PostMapping("/addCoupon")
     public ResponseEntity<Coupon> addCoupon(@RequestBody Coupon coupon) {
+        logger.info("Received request to add a new coupon: {}", coupon);
         Coupon savedCoupon = couponService.addCoupon(coupon);
         return ResponseEntity.ok(savedCoupon);
     }
