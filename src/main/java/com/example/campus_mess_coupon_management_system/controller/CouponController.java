@@ -88,19 +88,17 @@ public class CouponController {
     public ResponseEntity<?> getCouponById(@PathVariable Long id) {
         // Get the authenticated user details
         CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
+        Coupon coupon = couponService.getCouponById(id);
         // Check if the authenticated user has the ADMIN role
         if (isAdmin(userDetails))
         {
             // If the user is an admin, allow access to any seller's coupons
-            Coupon coupon = couponService.getCouponById(id);
             return ResponseEntity.ok(coupon);
         }
         // Check if the authenticated user's ID matches the seller ID
-        if (!userDetails.getId().equals(id)) {
+        if (!userDetails.getId().equals(coupon.getSeller().getId())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to view this coupon.");
         }
-        Coupon coupon = couponService.getCouponById(id);
         return ResponseEntity.ok(coupon);
     }
 
@@ -117,7 +115,7 @@ public class CouponController {
             return ResponseEntity.noContent().build();
         }
         // Check if the authenticated user's ID matches the seller ID
-        if (!userDetails.getId().equals(coupon.getId())) {
+        if (!userDetails.getId().equals(coupon.getSeller().getId())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to delete this coupon.");
         }
 
@@ -138,7 +136,7 @@ public class CouponController {
             return ResponseEntity.ok(updatedCoupon);
         }
         // Check if the authenticated user's ID matches the seller ID
-        if (!userDetails.getId().equals(coupon.getId())) {
+        if (!userDetails.getId().equals(coupon.getSeller().getId())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to update this coupon.");
         }
 
