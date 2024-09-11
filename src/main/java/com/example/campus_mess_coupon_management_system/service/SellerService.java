@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import java.util.List;
 
 @Service
 @Slf4j
@@ -27,7 +26,6 @@ public class SellerService {
         seller.setPassword(passwordEncoder.encode(seller.getPassword()));
         return sellerRepository.save(seller);
     }
-
     public Seller updateSellerDetails(Long id, Seller updatedSellerDetails) {
         // Find the existing seller
         Seller existingSeller = sellerRepository.findById(id)
@@ -38,8 +36,8 @@ public class SellerService {
             existingSeller.setName(updatedSellerDetails.getName());
         }
 
-        if (updatedSellerDetails.getEmail() != null) {
-            existingSeller.setEmail(updatedSellerDetails.getEmail());
+        if (updatedSellerDetails.getPassword() != null) {
+            existingSeller.setPassword(passwordEncoder.encode(updatedSellerDetails.getPassword()));
         }
 
         if (updatedSellerDetails.getMobile() != null) {
